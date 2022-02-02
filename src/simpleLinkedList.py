@@ -1,9 +1,9 @@
 import json
 
 
-class Node:
+class SimpleNode:
     def __init__(self, element: object = None, next_node=None):
-        self.item = element
+        self.element = element
         self.next_node = next_node
 
 
@@ -28,7 +28,7 @@ class SimpleLinkedListIterable:
 
 class SimpleLinkedList:
     def __init__(self):
-        self.__first_node: Node = None
+        self.__first_node: SimpleNode = None
         self.__size = 0
 
     def __iter__(self):
@@ -39,7 +39,7 @@ class SimpleLinkedList:
 
     def __node(self, index):
         if self.__is_element_index(index):
-            x: Node = self.__first_node
+            x: SimpleNode = self.__first_node
             i = 0
             while i < index:
                 x = x.next_node
@@ -56,9 +56,9 @@ class SimpleLinkedList:
 
     def add(self, element: object):
         if self.get_last() is None:
-            self.__first_node = Node(element)
+            self.__first_node = SimpleNode(element)
         else:
-            self.get_last().next_node = Node(element)
+            self.get_last().next_node = SimpleNode(element)
         self.__rise_size()
 
     def check_element_index(self, index):
@@ -71,28 +71,40 @@ class SimpleLinkedList:
 
     def get(self, index: int):
         self.check_element_index(index)
-        return self.__node(index).item
+        return self.__node(index).element
 
     def get_last(self):
         if self.__first_node is None:
             return None
         else:
-            node: Node = self.__first_node
+            node: SimpleNode = self.__first_node
             while node.next_node is not None:
                 node = node.next_node
             return node
 
-    def set(self, index: int, element):
+    def insert(self, index: int, element):
         self.check_element_index(index)
         if index is self.__size:
             self.add(element)
         else:
-            new_node = Node(element)
+            new_node = SimpleNode(element)
             new_node.next_node = self.__node(index)
             if index == 0:
                 self.__first_node = new_node
             else:
                 self.__node(index - 1).next_node = new_node
+
+    def set(self, index: int, element):
+        to_be_inserted_node: SimpleNode = SimpleNode(element)
+        if index == self.size():
+            self.add(element)
+        elif index == 0:
+            to_be_inserted_node.next_node = self.__node(0).next_node
+            self.__first_node = to_be_inserted_node
+        else:
+            self.check_element_index(index)
+            to_be_inserted_node.next_node = self.__node(index).next_node
+            self.__node(index - 1).next_node = to_be_inserted_node
 
     def size(self):
         return self.__size
@@ -102,13 +114,13 @@ class SimpleLinkedList:
         try:
             iterator = self.__iter__()
             while iterator.has_next():
-                result += "%d" % iterator.__next__() + (", " if iterator.has_next() else "}}")
+                result += "%s" % iterator.__next__() + (", " if iterator.has_next() else "}}")
         except StopIteration:
             print("Iterator tried to iterate non-existing element")
         except:
             print("Something happened while iterating")
         """
         for value in self.__iter__():
-            result += ", %d" % value
+            result += ", %s" % value
         """
         return result
