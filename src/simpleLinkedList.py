@@ -93,18 +93,18 @@ class SimpleLinkedList:
                 self.__first_node = new_node
             else:
                 self.__node(index - 1).next_node = new_node
+            self.__rise_size()
 
     def set(self, index: int, element):
-        to_be_inserted_node: SimpleNode = SimpleNode(element)
+        new_node: SimpleNode = SimpleNode(element)
         if index == self.size():
             self.add(element)
         elif index == 0:
-            to_be_inserted_node.next_node = self.__node(0).next_node
-            self.__first_node = to_be_inserted_node
+            self.__first_node = new_node
         else:
             self.check_element_index(index)
-            to_be_inserted_node.next_node = self.__node(index).next_node
-            self.__node(index - 1).next_node = to_be_inserted_node
+            new_node.next_node = self.__node(index).next_node
+            self.__node(index - 1).next_node = new_node
 
     def size(self):
         return self.__size
